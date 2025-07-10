@@ -13,7 +13,7 @@ namespace STDungeon
         StatStruct BaseStat { get; }
 
         // 각 직업이 보유한 스킬 2개
-        ISkill Skill1 { get; }
-        ISkill Skill2 { get; }
+        Skill Skill1 { get; }
+        Skill Skill2 { get; }
     }
 }

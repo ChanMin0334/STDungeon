@@ -11,6 +11,7 @@ namespace STDungeon
     {
         public string Name { get; set; }                // 플레이어 이름
         public int CurrentHP { get; set; }              // 현재 체력
+        public int CurrentMP { get; set; }              // 현재 마나
         public StatStruct Stat { get; set; }            // 스탯
         public int Gold { get; set; }                   // 보유 골드
         public Inventory Inventory { get; set; }        // 인벤토리
@@ -21,7 +22,7 @@ namespace STDungeon
             Stat = stat;
             Gold = gold;
             CurrentHP = stat.MaxHP;
-            Items = new List<Item>();
+            CurrentMP = stat.MaxMP;
             Inventory = new Inventory();
         }
     }
