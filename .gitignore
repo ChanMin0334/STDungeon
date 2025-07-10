@@ -1,0 +1,52 @@
+# .NET / Visual Studio 관련 파일
+.vs/
+.vs2017/
+.vs2019/
+.vs2015/
+.vs2013/
+
+# 빌드된 출력물
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ist/
+[Dd]ebug*-x86/
+[Dd]ebug*-x64/
+[Dd]ebug*-arm/
+[Dd]ebug*-arm64/
+[Dd]ebug-windows/
+[Dd]ist/
+[Dd]ebug*-macos/
+[Dd]ebug*-linux/
+
+# 빌드 아티팩트
+bin/
+obj/
+out/
+
+# 패키지
+# .NET Core / .NET Framework 관련 파일
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Rider/IntelliJ 관련 파일
+.idea/
+
+# 임시 파일
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.dbmdl
+*.bak
+*.swp
+*.tmp
+
+# ASP.NET 관련
+appsettings.Development.json
+appsettings.Production.json
+
+# 특정 디렉토리와 파일 무시
+.vscode/
+node_modules/
