@@ -3,41 +3,128 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using STDungeon.Structs;
 
 namespace STDungeon
 {
-    // 인벤토리 클래스: 아이템을 관리
     internal class Inventory
     {
-        private List<Item> items;
+        private List<ItemInfo> items;
+        private HashSet<string> equippedItems; // 장착된 아이템 이름 저장
 
         public Inventory()
         {
-            items = new List<Item>();
+            items = new List<ItemInfo>();
+            equippedItems = new HashSet<string>();
         }
 
-        // 아이템 추가
-        public void AddItem(Item item)
+        public void AddItem(ItemInfo item)
         {
             items.Add(item);
         }
 
-        // 아이템 제거
-        public bool RemoveItem(Item item)
+        public bool RemoveItem(ItemInfo item)
         {
             return items.Remove(item);
         }
 
-        // 아이템 목록 반환 (읽기 전용)
-        public IReadOnlyList<Item> GetItems()
+        public IReadOnlyList<ItemInfo> GetItems()
         {
             return items.AsReadOnly();
         }
 
-        // 인벤토리 내 아이템 개수
-        public int Count
+        public int Count => items.Count;
+
+        // 인벤토리 출력 및 장착/해제 기능
+        public void ShowAndEquip(Player player)
         {
-            get { return items.Count; }
+            while (true)
+            {
+                Console.Clear();
+                RenderConsole.WriteLine("인벤토리:");
+                if (items.Count == 0)
+                {
+                    RenderConsole.WriteLine("  (비어 있음)");
+                    RenderConsole.WriteLine("계속하려면 Enter를 누르세요...");
+                    Console.ReadLine();
+                    return;
+                }
+
+                for (int i = 0; i < items.Count; i++)
+                {
+                    var item = items[i];
+                    string statText = item.AttackBonus > 0
+                        ? $"공격력 상승: {item.AttackBonus}"
+                        : item.DefenseBonus > 0
+                            ? $"방어력 상승: {item.DefenseBonus}"
+                            : "";
+                    string equippedText = equippedItems.Contains(item.Name) ? " (장착됨)" : "";
+                    RenderConsole.WriteLine($"  {i + 1}. {item.Name} (가격: {item.Price}, {statText}){equippedText}");
+                }
+
+                RenderConsole.WriteLine("아이템 번호를 입력하면 장착/해제할 수 있습니다. (0 입력 시 나가기)");
+                Console.Write("선택: ");
+                string input = Console.ReadLine();
+
+                if (input == "0")
+                    break;
+
+                int idx;
+                if (int.TryParse(input, out idx) && idx >= 1 && idx <= items.Count)
+                {
+                    var item = items[idx - 1];
+                    if (!equippedItems.Contains(item.Name))
+                    {
+                        // 장착
+                        if (item.AttackBonus > 0)
+                        {
+                            player.ItemAttackBonus += item.AttackBonus;
+                        }
+                        else if (item.DefenseBonus > 0)
+                        {
+                            player.ItemDefenseBonus += item.DefenseBonus;
+                        }
+                        equippedItems.Add(item.Name);
+                        RenderConsole.WriteLine($"{item.Name}을(를) 장착했습니다.");
+                    }
+                    else
+                    {
+                        // 해제
+                        if (item.AttackBonus > 0)
+                        {
+                            player.ItemAttackBonus -= item.AttackBonus;
+                        }
+                        else if (item.DefenseBonus > 0)
+                        {
+                            player.ItemDefenseBonus -= item.DefenseBonus;
+                        }
+                        equippedItems.Remove(item.Name);
+                        RenderConsole.WriteLine($"{item.Name}을(를) 해제했습니다.");
+                    }
+                }
+                else
+                {
+                    RenderConsole.WriteLine("잘못된 입력입니다. 다시 입력하세요.");
+                }
+
+                RenderConsole.WriteLine("계속하려면 Enter를 누르세요...");
+                Console.ReadLine();
+            }
+        }
+
+        // 장착된 아이템의 총 보너스 반환
+        public (int attackBonus, int defenseBonus) GetEquippedBonus()
+        {
+            int attack = 0, defense = 0;
+            foreach (var item in items)
+            {
+                if (equippedItems.Contains(item.Name))
+                {
+                    attack += item.AttackBonus;
+                    defense += item.DefenseBonus;
+                }
+            }
+            return (attack, defense);
         }
     }
 }

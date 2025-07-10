@@ -39,6 +39,9 @@
     <Compile Include="Interface\Creture.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Interface\Job.cs" />
+    <Compile Include="Items.cs" />
+    <Compile Include="RenderConsole.cs" />
+    <Compile Include="Shop.cs" />
     <Compile Include="Structs\Skill.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Jobs.cs" />

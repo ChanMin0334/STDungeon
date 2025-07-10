@@ -4,30 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace STDungeon
+namespace STDungeon.Structs
 {
-    // 아이템의 기본 정보를 담는 구조체
+    // 아이템 정보 구조체
     internal struct ItemInfo
     {
-        public string Name;      // 아이템 이름
-        public int Price;        // 아이템 가격
-        public int StatBonus;    // 스탯 상승치
+        public string Name;         // 아이템 이름
+        public int Price;           // 아이템 가격 (구매완료는 0으로 표시)
+        public string Description;  // 아이템 설명
+        public int AttackBonus;     // 공격력 상승
+        public int DefenseBonus;    // 방어력 상승
 
-        public ItemInfo(string name, int price, int statBonus)
+        public ItemInfo(string name, int price, string description, int attackBonus, int defenseBonus)
         {
             Name = name;
             Price = price;
-            StatBonus = statBonus;
-        }
-    }
-
-    internal class Item
-    {
-        public ItemInfo Info { get; private set; }
-
-        public Item(string name, int price, int statBonus)
-        {
-            Info = new ItemInfo(name, price, statBonus);
+            Description = description;
+            AttackBonus = attackBonus;
+            DefenseBonus = defenseBonus;
         }
     }
 }

@@ -15,15 +15,23 @@ namespace STDungeon
         public StatStruct Stat { get; set; }            // 스탯
         public int Gold { get; set; }                   // 보유 골드
         public Inventory Inventory { get; set; }        // 인벤토리
+        public IJob Job { get; set; }                   // 직업 정보
 
-        public Player(string name, StatStruct stat, int gold)
+        // 아이템으로 인한 추가 스탯
+        public int ItemAttackBonus { get; set; }        // 아이템 공격력 보너스
+        public int ItemDefenseBonus { get; set; }       // 아이템 방어력 보너스
+
+        public Player(string name, int gold, IJob job)
         {
             Name = name;
-            Stat = stat;
+            Stat = job.BaseStat;
             Gold = gold;
-            CurrentHP = stat.MaxHP;
-            CurrentMP = stat.MaxMP;
+            CurrentHP = Stat.MaxHP;
+            CurrentMP = Stat.MaxMP;
             Inventory = new Inventory();
+            Job = job;
+            ItemAttackBonus = 0;
+            ItemDefenseBonus = 0;
         }
     }
 }
