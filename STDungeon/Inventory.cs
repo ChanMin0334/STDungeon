@@ -73,33 +73,51 @@ namespace STDungeon
                 if (int.TryParse(input, out idx) && idx >= 1 && idx <= items.Count)
                 {
                     var item = items[idx - 1];
-                    if (!equippedItems.Contains(item.Name))
+
+                    // 공격력/방어력 아이템 중복 장착 방지
+                    if (item.AttackBonus > 0)
                     {
+                        // 이미 공격력 아이템이 장착되어 있다면 해제
+                        var equippedAttackItem = items.FirstOrDefault(x => x.AttackBonus > 0 && equippedItems.Contains(x.Name));
+                        if (equippedAttackItem.Name != null)
+                        {
+                            player.ItemAttackBonus -= equippedAttackItem.AttackBonus;
+                            equippedItems.Remove(equippedAttackItem.Name);
+                            RenderConsole.WriteLine($"{equippedAttackItem.Name}을(를) 해제했습니다. (공격력 아이템은 하나만 장착 가능)");
+                        }
                         // 장착
-                        if (item.AttackBonus > 0)
+                        player.ItemAttackBonus += item.AttackBonus;
+                        equippedItems.Add(item.Name);
+                        RenderConsole.WriteLine($"{item.Name}을(를) 장착했습니다.");
+                    }
+                    else if (item.DefenseBonus > 0)
+                    {
+                        // 이미 방어력 아이템이 장착되어 있다면 해제
+                        var equippedDefenseItem = items.FirstOrDefault(x => x.DefenseBonus > 0 && equippedItems.Contains(x.Name));
+                        if (equippedDefenseItem.Name != null)
                         {
-                            player.ItemAttackBonus += item.AttackBonus;
+                            player.ItemDefenseBonus -= equippedDefenseItem.DefenseBonus;
+                            equippedItems.Remove(equippedDefenseItem.Name);
+                            RenderConsole.WriteLine($"{equippedDefenseItem.Name}을(를) 해제했습니다. (방어력 아이템은 하나만 장착 가능)");
                         }
-                        else if (item.DefenseBonus > 0)
-                        {
-                            player.ItemDefenseBonus += item.DefenseBonus;
-                        }
+                        // 장착
+                        player.ItemDefenseBonus += item.DefenseBonus;
                         equippedItems.Add(item.Name);
                         RenderConsole.WriteLine($"{item.Name}을(를) 장착했습니다.");
                     }
                     else
                     {
-                        // 해제
-                        if (item.AttackBonus > 0)
+                        // 기타 아이템(공격력/방어력 보너스가 없는 경우) 장착/해제
+                        if (!equippedItems.Contains(item.Name))
                         {
-                            player.ItemAttackBonus -= item.AttackBonus;
+                            equippedItems.Add(item.Name);
+                            RenderConsole.WriteLine($"{item.Name}을(를) 장착했습니다.");
                         }
-                        else if (item.DefenseBonus > 0)
+                        else
                         {
-                            player.ItemDefenseBonus -= item.DefenseBonus;
+                            equippedItems.Remove(item.Name);
+                            RenderConsole.WriteLine($"{item.Name}을(를) 해제했습니다.");
                         }
-                        equippedItems.Remove(item.Name);
-                        RenderConsole.WriteLine($"{item.Name}을(를) 해제했습니다.");
                     }
                 }
                 else
@@ -110,7 +128,9 @@ namespace STDungeon
                 RenderConsole.WriteLine("계속하려면 Enter를 누르세요...");
                 Console.ReadLine();
             }
+            Console.Clear();
         }
+
 
         // 장착된 아이템의 총 보너스 반환
         public (int attackBonus, int defenseBonus) GetEquippedBonus()
