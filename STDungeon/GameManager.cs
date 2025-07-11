@@ -117,7 +117,7 @@ namespace STDungeon
             }
         }
 
-        // 상점 출력 및 구매 기능
+        // 상점 출력 및 구매/판매 기능
         public void ShowShop()
         {
             Shop shop = new Shop();
@@ -127,22 +127,43 @@ namespace STDungeon
                 Console.Clear();
                 shop.ShowShopItems(Player);
                 RenderConsole.WriteLine($"보유 골드: {Player.Gold}");
-                RenderConsole.WriteLine("구매할 아이템 번호를 입력하세요. (0 입력 시 상점 나가기)");
+                RenderConsole.WriteLine("상점에서 할 행동을 선택하세요.");
+                RenderConsole.WriteLine("1. 구매하기");
+                RenderConsole.WriteLine("2. 판매하기");
+                RenderConsole.WriteLine("0. 상점 나가기");
                 Console.Write("선택: ");
-                string input = Console.ReadLine();
+                string actionInput = Console.ReadLine();
 
-                if (input == "0")
+                if (actionInput == "0")
                     break;
 
-                int itemIndex;
-                if (int.TryParse(input, out itemIndex))
+                if (actionInput == "1")
                 {
-                    itemIndex -= 1; // 배열 인덱스 보정
-                    shop.BuyItem(Player, itemIndex);
+                    RenderConsole.WriteLine("구매할 아이템 번호를 입력하세요. (0 입력 시 취소)");
+                    Console.Write("선택: ");
+                    string input = Console.ReadLine();
+
+                    if (input == "0")
+                        continue;
+
+                    int itemIndex;
+                    if (int.TryParse(input, out itemIndex))
+                    {
+                        itemIndex -= 1; // 배열 인덱스 보정
+                        shop.BuyItem(Player, itemIndex);
+                    }
+                    else
+                    {
+                        RenderConsole.WriteLine("잘못된 입력입니다. 다시 입력하세요.");
+                    }
+                }
+                else if (actionInput == "2")
+                {
+                    shop.SellItem(Player);
                 }
                 else
                 {
-                    RenderConsole.WriteLine("잘못된 입력입니다. 다시 입력하세요.");
+                    RenderConsole.WriteLine("잘못된 입력입니다. 다시 선택하세요.");
                 }
 
                 RenderConsole.WriteLine("계속하려면 Enter를 누르세요...");
@@ -150,6 +171,7 @@ namespace STDungeon
             }
             Console.Clear();
         }
+
 
 
 
